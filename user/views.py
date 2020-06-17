@@ -5,6 +5,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 
+def home(request):
+    
+    return render(request, 'user/home.html')
+
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -16,10 +21,6 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'user/register.html', {'form' : form})
-
-def home(request):
-    
-    return render(request, 'user/home.html')
 
 @login_required
 def change_password(request):
