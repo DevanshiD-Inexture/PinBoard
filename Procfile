@@ -1,1 +1,1 @@
-web: gunicorn pinboard.pinboard.wsgi
+web: gunicorn pinboard.wsgi
