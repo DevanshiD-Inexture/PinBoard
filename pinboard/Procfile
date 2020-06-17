@@ -1,0 +1,1 @@
+web: gunicorn pinboard.wsgi
