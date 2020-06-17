@@ -25,7 +25,7 @@ SECRET_KEY = 'iihh@k^-5#6=8awk8=or!$xwunp487--$3%cnwy8$)!c31750!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pinboard-2020-staging.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
