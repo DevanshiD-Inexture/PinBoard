@@ -69,6 +69,12 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'user.auth.EmailAuthBackend',
+)
+
+
 WSGI_APPLICATION = 'pinboard.wsgi.application'
 
 
