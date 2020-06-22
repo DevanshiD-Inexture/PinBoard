@@ -8,7 +8,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	about = models.TextField(blank=True)
 	image = models.ImageField(default='default.jpg', upload_to='profile_pic')
-	location = models.CharField(max_length=30, blank=True)
+	location = models.CharField(max_length=30, blank=True, null=True)
 	
 	def __str__(self):
 		return f'{self.user.username} Profile'
@@ -25,14 +25,13 @@ class Profile(models.Model):
 
 class Account(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	country = CountryField()
+	country = CountryField(blank=True, null=True)
 	GENDER = (
 		('m', 'Male'),
 		('f', 'Female'),
 		('o', 'Other'),
 	)
-	gender = models.CharField(max_length=1, choices=GENDER)
+	gender = models.CharField(max_length=1, choices=GENDER, blank=True, null=True)
 
 	def __str__(self):
 		return f'{self.user.username} Account'
-

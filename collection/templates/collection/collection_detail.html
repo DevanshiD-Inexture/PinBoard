@@ -1,0 +1,15 @@
+{% extends "user/base.html" %}
+{% block content %}
+	<article class="media content-section">
+		<img class="rounded-circle article-img" src="{{ collection.owner.profile.image.url }}">
+		<div class="media-body">
+			<div class="article-metadata">
+			  <h2>{{ object.owner }}</h2>
+			  <small class="text-muted">{{ object.date_created|date:"F d, Y" }}</small>
+			</div>
+			
+			<h2 class="article-title">{{ object.name }}</h2>
+			<p class="article-content">{{ object.content }}</p>
+		</div>
+	</article>
+{% endblock content%}
