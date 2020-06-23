@@ -15,7 +15,7 @@ from collection.models import Collection, Pin
 def home(request):
 	
 	context = {
-		'pins' : Pin.objects.all()
+		'pins' : Pin.objects.filter(author = request.user)
 	}
 	return render(request, 'user/home.html', context)
 

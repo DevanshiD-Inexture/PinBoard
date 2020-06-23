@@ -36,8 +36,7 @@ class CollectionCreateView(LoginRequiredMixin, CreateView):
 	fields = ['name', 'description']
 
 	def form_valid(self, form):
-		print(form)
-		print(form.is_valid())
+
 		form.instance.owner = self.request.user
 		return super().form_valid(form)
 
@@ -75,24 +74,18 @@ class PinListView(ListView):
 @login_required
 def create_pin(request):
 	if request.method == 'POST':
-		collection = Collection.objects.filter(owner=request.user)
-		
-		form = PinCreateForm(request.POST, request.FILES, initial={'collection': collection})
-		print(collection)
-		
+
+		form = PinCreateForm(request.user, request.POST, request.FILES)
+
 		if form.is_valid():
-			pin = form.save()
-			pin.refresh_from_db()
-			pin.title = form.cleaned_data.get('title')
-			pin.detail = form.cleaned_data.get('detail')
-			pin.image = form.cleaned_data.get('image')
-			pin.collection = form.cleaned_data.get('collection')
+			pin = form.save(commit=False)
+			pin.author = request.user
 			pin.save()
+			
 			messages.success(request, f'Your Pin has been Created!')
 			return redirect('home')
-		else:
-			print("Not Valid")
+		
 	else:
-		form = PinCreateForm()
+		form = PinCreateForm(request.user)
 	
 	return render(request, 'collection/pin_form.html', {'form' : form})
