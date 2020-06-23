@@ -9,10 +9,15 @@ from .forms import (UserRegisterForm,
 					UserAccountUpdateForm, 
 					ProfileUpdateForm, 
 					AccountUpdateForm)
+from collection.models import Collection
+
 
 def home(request):
 	
-	return render(request, 'user/home.html')
+	context = {
+		'collections' : Collection.objects.all()
+	}
+	return render(request, 'user/home.html', context)
 
 
 def register(request):

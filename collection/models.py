@@ -8,7 +8,7 @@ class Collection(models.Model):
 	
 	owner = models.ForeignKey(User, on_delete = models.CASCADE)
 	name = models.CharField(max_length = 100)	
-	description = models.TextField(blank=True)
+	description = models.TextField(blank=True, max_length=255)
 	date_created = models.DateTimeField(default = timezone.now)
 	
 	def __str__(self):
