@@ -9,13 +9,13 @@ from .forms import (UserRegisterForm,
 					UserAccountUpdateForm, 
 					ProfileUpdateForm, 
 					AccountUpdateForm)
-from collection.models import Collection
+from collection.models import Collection, Pin
 
 
 def home(request):
 	
 	context = {
-		'collections' : Collection.objects.all()
+		'pins' : Pin.objects.all()
 	}
 	return render(request, 'user/home.html', context)
 
