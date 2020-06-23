@@ -10,7 +10,8 @@
 		      		<small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
 		    	</div>
 				<h3>{{ pin.title }}</h3>
-				<a class="article-title" href="{% url 'pin-detail' pin.id %}"><img class="article-img" src="{{ pin.image.url }}"></a>
+				<a class="article-title" href="{% url 'pin-detail' pin.id %}"><img class="article-img" src="{{ pin.image.url }}"></a><br>
+				<br><p>Total Likes: {{ pin.likes.count }}</p>
 		  	</div>
 		</article>
 	{% endfor %}
