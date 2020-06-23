@@ -14,7 +14,11 @@
 			    </div>
 			{% endif %}
 			<h2 class="article-title">{{ object.name }}</h2>
-			<p><button><a class="like-button" href="{% url 'like-toggle' object.id %}">Like</a></button> {{ object.likes.count }}</p>
+			{% if user.is_authenticated %}
+				<p><button><a class="like-button" href="{% url 'like-toggle' object.id %}">Like</a></button> {{ object.likes.count }}</p>
+			{% else %}
+				<p>Likes: {{ object.likes.count }}</p>				
+			{% endif %}
 		</div>
 	</article>
 {% endblock content%}
