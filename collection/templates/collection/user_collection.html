@@ -1,0 +1,16 @@
+{% extends "user/base.html" %}
+{% block content %}
+	<h1 class = "mb-3">Posts by {{ view.kwargs.username }} </h1>
+	{% for collection in collections %}
+		<article class="media content-section">
+			<img class="rounded-circle article-img" src="{{ collection.owner.profile.image.url }}">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <h2>{{ collection.owner }}</h2>
+		      <small class="text-muted">{{ object.date_created|date:"F d, Y" }}</small>
+		    </div>
+		    <h3><a class="article-title" href="{% url 'collection-detail' collection.id %}">{{ collection.name }}</a></h3>
+		  </div>
+		</article>
+	{% endfor %}
+{% endblock content%}
