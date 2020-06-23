@@ -8,7 +8,8 @@ from django.views.generic import (
 	 DetailView, 
 	 CreateView,
 	 UpdateView, 
-	 DeleteView
+	 DeleteView,
+	 RedirectView
 )
 from collection.models import Collection, Pin
 from collection.forms import PinCreateForm, PinUpdateForm
@@ -123,3 +124,15 @@ def delete_pin(request, pk):
 		pin.delete()
 		return redirect('home')
 	return render(request, 'collection/pin_confirm_delete.html', {'object':pin})
+
+class PinLikeToggle(RedirectView, LoginRequiredMixin):
+	def get_redirect_url(self, *args, **kwargs):
+		pk = self.kwargs.get("pk")
+		obj = get_object_or_404(Pin, pk=pk)
+		url_ = obj.get_absolute_url()
+		user = self.request.user
+		if user in obj.likes.all():
+			obj.likes.remove(user)
+		else:
+			obj.likes.add(user)
+		return url_

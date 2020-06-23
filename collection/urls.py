@@ -8,6 +8,7 @@ from .views import (CollectionCreateView,
                     PinListView,
                     PinDetailView,
                     UserPinView,
+                    PinLikeToggle,
                     )
 from . import views
 
@@ -23,4 +24,5 @@ urlpatterns = [
     path('pins/<str:username>/', UserPinView.as_view(), name='user-pins'),
     path('pin/update/<int:pk>/', views.edit_pin, name='pin-update'),
     path('pin/delete/<int:pk>/', views.delete_pin, name='pin-delete'),
+    path('pin/<int:pk>/like/', PinLikeToggle.as_view(), name='like-toggle')
 ]
