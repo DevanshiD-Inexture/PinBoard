@@ -10,14 +10,14 @@ from django.views.generic import (
 	 UpdateView, 
 	 DeleteView
 )
-from .models import Collection
+from collection.models import Collection, Pin
+from collection.forms import PinCreateForm
 
 class CollectionListView(ListView):
 	model = Collection
 	template_name = 'user/home.html'
 	context_object_name = 'collections'
 	ordering = ['-date_created']
-
 
 class CollectionDetailView(DetailView):
 	model = Collection
@@ -65,34 +65,34 @@ class CollectionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 			return True
 		return False
 
-# class PinListView(ListView):
-# 	model = Pin
-# 	template_name = 'user/home.html'
-# 	context_object_name = 'pins'
-# 	ordering = ['-date_created']
+class PinListView(ListView):
+	model = Pin
+	template_name = 'user/home.html'
+	context_object_name = 'pins'
+	ordering = ['-date_created']
 
 
-# class PinCreateView(LoginRequiredMixin, CreateView):
-# 	model = Pin
-# 	fields = ['title', 'description', 'image']
-
-# 	def form_valid(self, form):
-# 		form.instance.owner = self.request.user
+@login_required
+def create_pin(request):
+	if request.method == 'POST':
+		collection = Collection.objects.filter(owner=request.user)
 		
-# 		return super().form_valid(form)		
-
-# @login_required
-# def create_pin(request):
-# 	if request.method == 'POST':
-# 		form = PinCreateForm(request.POST)
-# 		print(form)
-# 		if form.is_valid():
-# 			form.save()
-# 			messages.success(request, f'Your Pin has been Created!')
-# 			return redirect('home')
-# 		else:
-# 			print("Not Valid")
-# 	else:
-# 		form = PinCreateForm()
+		form = PinCreateForm(request.POST, request.FILES, initial={'collection': collection})
+		print(collection)
+		
+		if form.is_valid():
+			pin = form.save()
+			pin.refresh_from_db()
+			pin.title = form.cleaned_data.get('title')
+			pin.detail = form.cleaned_data.get('detail')
+			pin.image = form.cleaned_data.get('image')
+			pin.collection = form.cleaned_data.get('collection')
+			pin.save()
+			messages.success(request, f'Your Pin has been Created!')
+			return redirect('home')
+		else:
+			print("Not Valid")
+	else:
+		form = PinCreateForm()
 	
-# 	return render(request, 'collection/pin_form.html', {'form' : form})
+	return render(request, 'collection/pin_form.html', {'form' : form})

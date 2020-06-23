@@ -15,4 +15,5 @@ urlpatterns = [
     path('collection/create/', CollectionCreateView.as_view(), name='create-collection'),
     path('collection/<int:pk>/update/', CollectionUpdateView.as_view(), name = 'collection-update'),
 	path('collection/<int:pk>/delete/', CollectionDeleteView.as_view(), name = 'collection-delete'),
+	path('pin/create/', views.create_pin, name='create-pin'),
 ]
