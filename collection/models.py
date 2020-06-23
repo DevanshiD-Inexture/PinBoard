@@ -19,11 +19,12 @@ class Collection(models.Model):
 
 class Pin(models.Model):
 
-	title = models.CharField(max_length=100)
+	title = models.CharField(max_length=100, blank=True)
 	detail = models.TextField(blank=True, max_length=255)
 	date_posted = models.DateTimeField(default=timezone.now)
 	image = models.ImageField(upload_to='my_pins')
-	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, default=None)
+	collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+	author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return self.title

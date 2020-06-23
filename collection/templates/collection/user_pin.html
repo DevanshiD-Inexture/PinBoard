@@ -1,0 +1,24 @@
+{% extends "user/base.html" %}
+{% block content %}
+	
+	{% if not pins %}
+		<h3>You have no collections</h3>
+		<button><a href="{% url 'create-collection' %}">Create Collection</a></button>
+	{% else %}
+		<h1 class = "mb-3">{{ view.kwargs.username }} </h1>
+		{% for pin in pins %}
+			<article class="media content-section">
+			<div class="media-body">
+				<div class="article-metadata">
+					<h2><a class="article-title" href="{% url 'collection-detail' pin.collection.id %}">{{ pin.collection.name }}</a></h2>
+					<small class="text-muted">{{ object.date_created|date:"F d, Y" }}</small>
+				</div>
+				<div>
+					<a class="article-title" href="{% url 'pin-detail' pin.id %}"><img class="article-img" src="{{ pin.image.url }}"></a>
+				</div>
+			</div>		  
+			</article>
+		{% endfor %}
+	{% endif %}
+	
+{% endblock content%}

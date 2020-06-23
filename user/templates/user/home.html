@@ -6,11 +6,11 @@
 		  	<div class="media-body">
 		    	<div class="article-metadata">
 					<a class="mr-2" href="{% url 'user-collections' pin.collection.owner %}">{{ pin.collection.owner }}</a>
-					<h2>{{ pin.collection.name }}</h2>
+					<h2><a class="mr-2" href="{% url 'user-pins' pin.author %}">{{ pin.collection.name }}</a></h2>
 		      		<small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
 		    	</div>
 				<h3>{{ pin.title }}</h3>
-				<img class="article-img" src="{{ pin.image.url }}">
+				<a class="article-title" href="{% url 'pin-detail' pin.id %}"><img class="article-img" src="{{ pin.image.url }}"></a>
 		  	</div>
 		</article>
 	{% endfor %}
