@@ -11,7 +11,7 @@ from django.views.generic import (
 	 DeleteView
 )
 from collection.models import Collection, Pin
-from collection.forms import PinCreateForm
+from collection.forms import PinCreateForm, PinUpdateForm
 
 class CollectionListView(ListView):
 	model = Collection
@@ -70,6 +70,17 @@ class PinListView(ListView):
 	context_object_name = 'pins'
 	ordering = ['-date_created']
 
+class PinDetailView(DetailView):
+	model = Pin
+
+class UserPinView(ListView):
+	model = Pin
+	template_name = 'collection/user_pin.html'
+	context_object_name = 'pins'
+
+	def get_queryset(self):
+		user = get_object_or_404(User, username = self.kwargs.get('username'))
+		return Pin.objects.filter(author = user).order_by('-date_posted')
 
 @login_required
 def create_pin(request):
@@ -89,3 +100,26 @@ def create_pin(request):
 		form = PinCreateForm(request.user)
 	
 	return render(request, 'collection/pin_form.html', {'form' : form})
+
+@login_required
+def edit_pin(request, pk):
+	pin = get_object_or_404(Pin, pk=pk)    
+	form = PinUpdateForm(request.user, request.POST or None, instance=pin)
+
+	if form.is_valid():
+		form.save()
+		messages.success(request, f'Your pin details has been Updated!')
+		return redirect('home')
+	
+	context = {
+		'form' : form
+	}
+	return render(request, 'collection/pin_update.html', context)
+
+@login_required
+def delete_pin(request, pk):
+	pin = get_object_or_404(Pin, pk=pk)    
+	if request.method=='POST':
+		pin.delete()
+		return redirect('home')
+	return render(request, 'collection/pin_confirm_delete.html', {'object':pin})
