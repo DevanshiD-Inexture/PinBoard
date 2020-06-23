@@ -5,8 +5,8 @@
 			<img class="rounded-circle article-img" src="{{ pin.collection.owner.profile.image.url }}">
 		  	<div class="media-body">
 		    	<div class="article-metadata">
-					<h1>{{ pin.collection.name }}</h1>
-		      		<h2>{{ pin.collection.owner }}</h2>
+					<a class="mr-2" href="{% url 'user-collections' pin.collection.owner %}">{{ pin.collection.owner }}</a>
+					<h2>{{ pin.collection.name }}</h2>
 		      		<small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
 		    	</div>
 				<h3>{{ pin.title }}</h3>
