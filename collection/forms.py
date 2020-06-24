@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Collection, Pin
+from .models import Collection, Pin, Comment
 
 class PinCreateForm(forms.ModelForm):
 
@@ -30,3 +30,20 @@ class PinUpdateForm(forms.ModelForm):
 			return True
 		return False
 
+class CommentForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ['content']
+	
+		widgets = {
+          'content': forms.Textarea(attrs={'rows':4, 'cols':11}),
+        }
+
+class CommentEditForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ['content']
+	
+		widgets = {
+          'content': forms.Textarea(attrs={'rows':4, 'cols':11}),
+        }

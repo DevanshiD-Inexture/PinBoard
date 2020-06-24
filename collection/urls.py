@@ -20,9 +20,12 @@ urlpatterns = [
     path('collection/<int:pk>/update/', CollectionUpdateView.as_view(), name = 'collection-update'),
 	path('collection/<int:pk>/delete/', CollectionDeleteView.as_view(), name = 'collection-delete'),
 	path('pin/create/', views.create_pin, name='create-pin'),
-    path('pin/<int:pk>/',PinDetailView.as_view() , name='pin-detail'),
+    # path('pin/<int:pk>/',PinDetailView.as_view() , name='pin-detail'),
+    path('pin/<int:pk>/', views.pin_detail, name='pin-detail'),
     path('pins/<str:username>/', UserPinView.as_view(), name='user-pins'),
     path('pin/update/<int:pk>/', views.edit_pin, name='pin-update'),
     path('pin/delete/<int:pk>/', views.delete_pin, name='pin-delete'),
-    path('pin/<int:pk>/like/', PinLikeToggle.as_view(), name='like-toggle')
+    path('pin/<int:pk>/like/', PinLikeToggle.as_view(), name='like-toggle'),
+    path('comment/delete/<int:pk>/', views.delete_comment, name='comment-delete'),
+    
 ]
