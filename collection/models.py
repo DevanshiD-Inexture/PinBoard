@@ -33,3 +33,16 @@ class Pin(models.Model):
 
 	def get_absolute_url(self):
 		return reverse('pin-detail', kwargs={"pk": self.pk})
+
+class Comment(models.Model):
+	pin = models.ForeignKey(Pin, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	content = models.TextField(max_length=255)
+	date_comented = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return '{}-{}'.format(self.pin.title, str(self.user.username))
+
+	def get_absolute_url(self):
+		return reverse('comment-detail', kwargs = {'pk':self.pk})
+

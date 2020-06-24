@@ -11,8 +11,8 @@ from django.views.generic import (
 	 DeleteView,
 	 RedirectView
 )
-from collection.models import Collection, Pin
-from collection.forms import PinCreateForm, PinUpdateForm
+from collection.models import Collection, Pin, Comment
+from collection.forms import PinCreateForm, PinUpdateForm, CommentForm, CommentEditForm
 
 class CollectionListView(ListView):
 	model = Collection
@@ -73,6 +73,27 @@ class PinListView(ListView):
 
 class PinDetailView(DetailView):
 	model = Pin
+
+def pin_detail(request, pk):
+	pin = get_object_or_404(Pin, pk=pk)
+	comments = Comment.objects.filter(pin=pin)
+
+	form = CommentForm(request.POST or None)
+	if form.is_valid():
+		comment_form = form.save(commit=False)
+		comment_form.user = request.user
+		comment_form.pin = pin
+		comment_form.save()
+		messages.success(request, 'Your comment successfully addedd')
+		return redirect(pin.get_absolute_url())
+
+	context = {
+		'pin' : pin,
+		'comments' : comments,
+		'comment_form' : form,
+	}
+
+	return render(request, 'collection/pin_detail.html', context=context)
 
 class UserPinView(ListView):
 	model = Pin
@@ -136,3 +157,11 @@ class PinLikeToggle(RedirectView, LoginRequiredMixin):
 		else:
 			obj.likes.add(user)
 		return url_
+
+@login_required
+def delete_comment(request, pk):
+	comment = get_object_or_404(Comment, pk=pk)    
+	if request.method=='POST':
+		comment.delete()
+		return redirect('home')
+	return render(request, 'collection/comment_confirm_delete.html', {'object':comment})
