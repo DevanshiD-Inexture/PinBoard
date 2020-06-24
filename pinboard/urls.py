@@ -19,12 +19,14 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views 
 from django.urls import path, include
 from user import views as user_view
+from user.views import ProfileFollowView, ProfileDetailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', user_view.home, name='home'),
     path('profile/', user_view.profile, name='profile'),
     path('edit-profile/', user_view.edit_profile, name='edit_profile'),
+    path('profile-detail/<str:username>/', ProfileDetailView.as_view(), name='profile-detail'),
+    path('follow/', ProfileFollowView.as_view(), name='follow'),
     path('account/', user_view.account, name='account'),
     path('settings/', user_view.settings, name='settings'),
     path('register/', user_view.register, name='register'),

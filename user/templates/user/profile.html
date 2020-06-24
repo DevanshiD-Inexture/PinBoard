@@ -8,6 +8,9 @@
 		  		<h2 class="account-heading">{{ user.username }}</h2>
 				  <p class="text-secondary">{{ user.email }}</p>
 				  <p class="text-secondary">{{ user.profile.about }}</p>
+				  {% if not user %}
+                    <p>{% include 'user/follow_user.html' with username=user.username%}</p>
+                  {% endif %}
 			</div>
 	  	</div>
 	</div>
