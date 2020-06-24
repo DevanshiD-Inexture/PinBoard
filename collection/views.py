@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.generic import (
@@ -12,7 +13,7 @@ from django.views.generic import (
 	 RedirectView
 )
 from collection.models import Collection, Pin, Comment
-from collection.forms import PinCreateForm, PinUpdateForm, CommentForm, CommentEditForm
+from collection.forms import PinCreateForm, PinUpdateForm, CommentForm
 
 class CollectionListView(ListView):
 	model = Collection
@@ -65,11 +66,21 @@ class CollectionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 			return True
 		return False
 
-class PinListView(ListView):
-	model = Pin
-	template_name = 'user/home.html'
-	context_object_name = 'pins'
-	ordering = ['-date_created']
+def pin_list(request):
+	pins = Pin.objects.all()
+	query = request.GET.get('q')
+	if query:
+		pins = Pin.objects.filter(
+			Q(title__icontains=query)|
+			Q(author__username__icontains=query)|
+			Q(collection__name=query)
+			)
+	
+	context = {
+		'pins' : pins,
+	}
+	return render(request, 'user/home.html', context)
+
 
 class PinDetailView(DetailView):
 	model = Pin

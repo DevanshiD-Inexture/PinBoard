@@ -14,5 +14,9 @@
 				<br><p>Total Likes: {{ pin.likes.count }}</p>
 		  	</div>
 		</article>
+		{% empty %}
+			<div class="container-fluid">
+				<h3>No Result Found having "<b>{{ request.GET.q }}</b>"</h3>
+			</div>
 	{% endfor %}
 {% endblock content%}
