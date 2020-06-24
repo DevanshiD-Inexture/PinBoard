@@ -6,6 +6,12 @@
 		  	<div class="media-body">
 		    	<div class="article-metadata">
 					<a class="mr-2" href="{% url 'user-collections' pin.collection.owner %}">{{ pin.collection.owner }}</a>
+					{% if not pin.author == user %}
+					<button><a href="{% url 'profile-detail' pin.author %}">Visit Profile</a></button>
+					{% else %}
+						<button><a href="{% url 'profile' %}">Visit My Profile</a></button>
+					{% endif %}
+					
 					<h2><a class="mr-2" href="{% url 'user-pins' pin.author %}">{{ pin.collection.name }}</a></h2>
 		      		<small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
 		    	</div>

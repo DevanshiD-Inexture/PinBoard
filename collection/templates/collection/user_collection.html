@@ -1,6 +1,7 @@
 {% extends "user/base.html" %}
 {% block content %}
 	<h1 class = "mb-3">Collection by {{ view.kwargs.username }} </h1>
+	
 	{% for collection in collections %}
 		<article class="media content-section">
 			<img class="rounded-circle article-img" src="{{ collection.owner.profile.image.url }}">
