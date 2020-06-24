@@ -4,14 +4,26 @@
         {% for p in profile %}
 	
 		<article class="media content-section">
-			<img class="rounded-circle account-img" src="{{ p.image.url }}">
+            <img class="rounded-circle account-img" src="{{ p.image.url }}">
+            
 			<div class="media-body">
 		  		<h2 class="account-heading">{{ p.user.username }}</h2>
-				<p class="text-secondary">{{ p.user.email }}</p>
-                <p>{% include 'user/follow_user.html' with username=p.user.username is_following=is_following %}</p>
-                    
-			</div>
-		    
+				  <p class="text-secondary">{{ p.user.email }}</p>
+                  {% if not p.user == request.user %}
+                    <p>{% include 'user/follow_user.html' with username=p.user.username is_following=is_following %}</p>
+                {% endif %}
+                <p>{{ p.followers.count }} Followers |  {{ p.user.is_following.count }} Following</p>
+
+                <div>
+                    {% for follower in p.followers.all %}
+                    <div>
+                        <img class="rounded-circle account-profile-img" src="{{ follower.profile.image.url }}"/>
+                        <a href="{% url 'profile-detail' follower.username %}">{{ follower.username }}</a>                        
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>        
 		  </div>
         </article>
         {% endfor %}

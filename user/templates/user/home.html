@@ -6,19 +6,22 @@
 		  	<div class="media-body">
 		    	<div class="article-metadata">
 					<a class="mr-2" href="{% url 'user-collections' pin.collection.owner %}">{{ pin.collection.owner }}</a>
-					{% if not pin.author == user %}
-					<button><a href="{% url 'profile-detail' pin.author %}">Visit Profile</a></button>
-					{% else %}
-						<button><a href="{% url 'profile' %}">Visit My Profile</a></button>
-					{% endif %}
-					
 					<h2><a class="mr-2" href="{% url 'user-pins' pin.author %}">{{ pin.collection.name }}</a></h2>
 		      		<small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
 		    	</div>
 				<h3>{{ pin.title }}</h3>
 				<a class="article-title" href="{% url 'pin-detail' pin.id %}"><img class="article-img" src="{{ pin.image.url }}"></a><br>
 				<br><p>Total Likes: {{ pin.likes.count }}</p>
-		  	</div>
+			</div>
+			<div>
+				{%if request.user.is_authenticated %}
+					{% if not pin.author == user %}
+						<button><a href="{% url 'profile-detail' pin.author %}">Visit Profile</a></button>
+					{% else %}
+						<button><a href="{% url 'profile' %}">Visit Profile</a></button>
+					{% endif %}
+				{% endif %}
+			  </div>
 		</article>
 		{% empty %}
 			<div class="container-fluid">

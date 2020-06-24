@@ -8,10 +8,16 @@
 		  		<h2 class="account-heading">{{ user.username }}</h2>
 				  <p class="text-secondary">{{ user.email }}</p>
 				  <p class="text-secondary">{{ user.profile.about }}</p>
-				  {% if not user %}
-                    <p>{% include 'user/follow_user.html' with username=user.username%}</p>
-                  {% endif %}
+				  <p>{{ user.profile.followers.count }} Followers | {{ user.is_following.count }} Following</p>
+				  {% for follower in user.profile.followers.all %}
+					<div>
+						<img class="rounded-circle account-profile-img" src="{{ follower.profile.image.url }}"/>
+						<a href="{% url 'profile-detail' follower.username %}">{{ follower.username }}</a>                        
+					</div>
+				{% endfor %}
 			</div>
-	  	</div>
+		  </div>		  
+		  <div>			
+		</div>
 	</div>
 {% endblock content%}
