@@ -17,7 +17,7 @@
                 <div>
                     {% for follower in p.followers.all %}
                     <div>
-                        <img class="rounded-circle account-profile-img" src="{{ follower.profile.image.url }}"/>
+                        <img class="rounded-circle account-img" src="{{ follower.profile.image.url }}"/>
                         <a href="{% url 'profile-detail' follower.username %}">{{ follower.username }}</a>                        
                     </div>
                     {% endfor %}

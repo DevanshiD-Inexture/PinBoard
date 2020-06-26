@@ -81,10 +81,6 @@ def pin_list(request):
 	}
 	return render(request, 'user/home.html', context)
 
-
-class PinDetailView(DetailView):
-	model = Pin
-
 def pin_detail(request, pk):
 	pin = get_object_or_404(Pin, pk=pk)
 	comments = Comment.objects.filter(pin=pin)
