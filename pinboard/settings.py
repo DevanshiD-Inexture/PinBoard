@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'collection.apps.CollectionConfig',
     'crispy_forms',
+    'chat.apps.ChatConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +55,17 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'pinboard.urls'
+ASGI_APPLICATION = "pinboard.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
 
 TEMPLATES = [
     {

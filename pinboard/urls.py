@@ -39,6 +39,7 @@ urlpatterns = [
     path('password-change/', user_view.change_password, name='change_password'),
 
     path('', include('collection.urls')),
+    path('messages/', include('chat.urls')),
 ]
 
 if settings.DEBUG:

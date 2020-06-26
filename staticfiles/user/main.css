@@ -77,6 +77,12 @@ body {
     width: 125px;
     margin-right: 20px;
     margin-bottom: 16px;
+  }    
+  
+  .account-profile-img {
+    height: 65px;
+    width: 65px;
+    margin-bottom: 16px;
   }
   
   .account-heading {

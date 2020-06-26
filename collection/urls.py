@@ -4,7 +4,6 @@ from .views import (CollectionCreateView,
                     UserCollectionView,
                     CollectionDeleteView,
                     CollectionUpdateView,
-                    PinDetailView,
                     UserPinView,
                     PinLikeToggle,
                     )
