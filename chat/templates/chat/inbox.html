@@ -1,5 +1,17 @@
 {% extends "user/base.html" %}
-
 {% block content %}
+    <h2>ChatBox</h2>
+
+    {% for room in rooms_list %}
+        <div class="content-section">
+            {% if room.first != request.user %}
+                <img class="rounded-circle article-img" src="{{ room.first.profile.image.url }}">
+                <a href="{% url 'chat:chat-detail' room.first %}">{{ room.first }}</a>
+            {% else %}
+                <img class="rounded-circle article-img" src="{{ room.second.profile.image.url }}">
+                <a href="{% url 'chat:chat-detail' room.second %}">{{ room.second }}</a>
+            {% endif %}
+        </div>
+    {% endfor %}
     
 {% endblock %}
