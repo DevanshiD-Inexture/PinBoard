@@ -8,8 +8,8 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
         <link rel="stylesheet" type="text/css" href="{% static 'user/main.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/chat/custom.css' %}">
         
         <title>PinBoard</title>
 
@@ -42,6 +42,7 @@
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                     {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'chat:user-inbox'  %}">Messages</a>
                         <a class="nav-item nav-link" href="{% url 'user-pins' user %}">My Pins</a>
                         <a class="nav-item nav-link" href="{% url 'settings' %}">Settings</a>
                         <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>

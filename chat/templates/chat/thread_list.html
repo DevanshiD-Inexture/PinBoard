@@ -1,24 +1,72 @@
 {% extends "user/base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
-<h3>Thread for {% if user != object.first %}{{ object.first }}{% else %}{{ object.second }}{% endif %}</h3>
-<ul id='chat-items'>
-{% for chat in object.chatmessage_set.all %}
-
-<li>{{ chat.message }} via {{ chat.user }}</li>
-
-{% endfor %}
-</ul>
-
-<form id='form' method='POST'> {% csrf_token %}
-    <input type="hidden" id="myUsername" value="{{ user.username }}" />
-{{form.as_p }}
-<input type='submit' class='btn btn-primary'/>
-</form>
-
+    <h3>
+        {% if user != object.first %}
+            <div class="media">
+                <img class="rounded-circle account-img" src="{{ object.first.profile.image.url }}">
+                <div class="media-body">
+                    <h2 class="account-heading">{{ object.first.username }}</h2>
+                    <h4>{{ object.second.last_login }}</h4>
+                </div>
+            </div>
+        {% else %}
+            <div class="media">
+                <img class="rounded-circle account-img" src="{{ object.second.profile.image.url }}">
+                <div class="media-body">
+                    <h2 class="account-heading">{{ object.second.username }}</h2>
+                    <h4>Last Seen: {{ object.second.last_login }}</h4>
+                </div>
+            </div>
+        {% endif %}
+    </h3>
+    <div class="container">
+        <div class="row mt-5 ">
+            <div id="messages" class="col-md-0 offset-md-0 col-sm-12 offset-sm-6 col-12 comments-main pt-4 rounded scroll">
+                <ul id='chat-items' class="p-0">
+                    {% for chat in object.chatmessage_set.all %}
+                        {% if user != chat.user %}
+                            <li>
+                                <div class="row comments mb-2 ">
+                                    <div class="col-md-9 col-sm-9 col-9 comment rounded mb-2">
+                                        <h4 class="m-1"><a href="#">{{ chat.user }}</a></h4>
+                                        <p class="mb-0 text-white">{{ chat.message }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <ul class="p-0">
+                                <li>
+                                    <div class="row comments mb-2">
+                                        <div class="col-md-7 col-sm-7 col-8 comment rounded mb-2 text-right">
+                                            <h4 class="m-0"><a href="#">{{ chat.user }}</a></h4>
+                                            <p class="mb-0 text-white">{{ chat.message }}</p>
+                                        </div>    
+                                    </div>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    {% endfor %}                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <form id='form' method='post'> 
+        {% csrf_token %}
+        <div class="row comment-box-main p-3 rounded-bottom">
+            <input type="hidden" id="myUsername" value="{{ user.username }}" />
+            <div class="col-md-9 col-sm-9 col-20 pr-0 comment-box">
+                <input id="id_message" type="text" class="form-control" placeholder="Write your message here...." />
+            </div>
+            <div class="col-md-3 col-sm-2 col-2 pl-0 text-center send-btn">
+                <button class='btn btn-primary' input type='submit'>Send</button>
+            </div>
+        </div>
+    </form>
 {% endblock %}
 
 {% block script %}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.14/vue.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js">
 </script>
 
@@ -29,9 +77,34 @@ var loc = window.location
 var formData = $("#form")
 var msgInput = $("#id_message")
 var chatHolder = $("#chat-items")
-var me =$("#myUsername").val()
+var me = $('#myUsername').val()
 
+const messages = document.getElementById('messages');
 
+function appendMessage() {
+	const message = document.getElementsByClassName('message')[0];
+  const newMessage = message.cloneNode(true);
+  messages.appendChild(newMessage);
+}
+
+function getMessages() {
+	// Prior to getting your messages.
+  shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
+  /*
+   * Get your messages, we'll just simulate it by appending a new one syncronously.
+   */
+  appendMessage();
+  // After getting your messages.
+  if (!shouldScroll) {
+    scrollToBottom();
+  }
+}
+
+function scrollToBottom() {
+  messages.scrollTop = messages.scrollHeight;
+}
+
+scrollToBottom();
 
 var wsStart = 'ws://'
 if (loc.protocol == 'https:'){
@@ -43,7 +116,37 @@ var socket = new ReconnectingWebSocket(endpoint)
 socket.onmessage = function(e){
     console.log("message", e)
     var chatDataMsg = JSON.parse(e.data)
-    chatHolder.append("<li>" + chatDataMsg.message + " via " + chatDataMsg.username + "</li>" )
+    console.log(chatDataMsg)
+    if (chatDataMsg.username == me ){
+        chatHolder.append(
+            '<ul class="p-0">'+
+                '<li>'+
+                    '<div class="row comments mb-2">'+
+                        '<div class="col-md-7 col-sm-7 col-8 comment rounded mb-2 text-right">'+
+                            '<h4 class="m-0"><a href="#">' + chatDataMsg.username + '</a></h4>'+
+                            '<p class="mb-0 text-white">' + chatDataMsg.message + '</p>'+
+                        '</div>'+
+                    '</div>'+
+                '</li>'+
+            '</ul>'
+        );
+    }else{
+        chatHolder.append(
+            '<ul class="p-0">'+
+                '<ul class="p-0">'+
+                '<li>'+
+                    '<div class="row comments mb-2">'+
+                        '<div class="col-md-9 col-sm-9 col-9 comment rounded mb-2">'+
+                            '<h4 class="m-0"><a href="#">' + chatDataMsg.username + '</a></h4>'+
+                            '<p class="mb-0 text-white">' + chatDataMsg.message + '</p>'+
+                        '</div>'+
+                    '</div>'+
+                '</li>'+
+                '</ul>'+
+            '</ul>'
+            );
+        }
+    
 }
 
 socket.onopen = function(e){
@@ -51,9 +154,7 @@ socket.onopen = function(e){
     formData.submit(function(event){
         event.preventDefault()
         var msgText = msgInput.val()
-        // chatHolder.append("<li>" + msgText + " via " + me + "</li>" )
-        // var formDataSerialized = formData.serialize()
-
+    
         var finalData = {
             'message' : msgText
         }
