@@ -2,6 +2,11 @@ body{
     font-family: 'Raleway', sans-serif;
     background: #E9ECE9;
   }
+  div.scroll { 
+    width: 730px;
+    height: 300px;
+    overflow-x: hidden;  
+  } 
   .comments-main{
     background: #FFF;
   }
