@@ -7,11 +7,50 @@
             {% if room.first != request.user %}
                 <img class="rounded-circle article-img" src="{{ room.first.profile.image.url }}">
                 <a href="{% url 'chat:chat-detail' room.first %}">{{ room.first }}</a>
+                <!-- <a class="nav-link" href="#" id="notificationLink">Inbox</a> -->
+                {% for notification in notifications %}
+                    {% if notification.notification_chat.user == room.first %}
+                    
+                        <span id="notification_id"></span>
+                        <span id="count"></span>
+                    {% endif %}
+                {% endfor %}
             {% else %}
                 <img class="rounded-circle article-img" src="{{ room.second.profile.image.url }}">
                 <a href="{% url 'chat:chat-detail' room.second %}">{{ room.second }}</a>
+                <!-- <a class="nav-link" href="#" id="notificationLink">Inbox</a> -->
+                {% for notification in notifications %}
+                    
+                    {% if notification.notification_chat.user == room.second %}
+                    
+                        <span id="notification_id"></span>
+                        <span id="count"></span>
+                    
+                    {% endif %}
+                    
+                {% endfor %}
             {% endif %}
-        </div>
+        </div>        
     {% endfor %}
+    <div><a href="{% url 'chat:user-notification' %}">Go to Notifications</a></div>
     
+{% endblock %}
+
+{% block script %}
+<script>
+    var notCount = document.getElementById("notification_id");
+    var count = document.getElementById("count");
+    notCount.addEventListener("keyup", function(){
+        var count1 = notCount.value();
+        count.innerText = count1;
+    });
+
+    $(document).ready(function() {
+      $("#notificationLink").click(function() {
+        // $("#notificationContainer").fadeToggle(300);
+        $("#notification_id").fadeOut("slow");
+        return false;
+      });
+
+</script>
 {% endblock %}

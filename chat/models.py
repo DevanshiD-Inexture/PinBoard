@@ -3,7 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
-
+from django.contrib.auth.models import User
 
 class ThreadManager(models.Manager):
 	def by_user(self, user):
@@ -60,3 +60,12 @@ class ChatMessage(models.Model):
 	user        = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='sender', on_delete=models.CASCADE)
 	message     = models.TextField()
 	timestamp   = models.DateTimeField(auto_now_add=True)
+
+
+class Notification(models.Model):
+    notification_user = models.ForeignKey(User, related_name='user_notify', on_delete=models.CASCADE)
+    notification_chat = models.ForeignKey(ChatMessage, on_delete=models.CASCADE)
+    notification_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.id} attached to {self.notification_user}'

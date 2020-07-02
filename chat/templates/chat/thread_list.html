@@ -1,6 +1,11 @@
 {% extends "user/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+    
+    <script>
+        
+    </script>
+    <a class="btn btn-light" id="notification_id" href="{% url 'chat:user-inbox' %}">Back to Inbox</a>
     <h3>
         {% if user != object.first %}
             <div class="media">
@@ -115,8 +120,9 @@ var socket = new ReconnectingWebSocket(endpoint)
 
 socket.onmessage = function(e){
     console.log("message", e)
+    var data = JSON.parse(event.data);
     var chatDataMsg = JSON.parse(e.data)
-    console.log(chatDataMsg)
+    // console.log(chatDataMsg)
     if (chatDataMsg.username == me ){
         chatHolder.append(
             '<ul class="p-0">'+
@@ -149,6 +155,7 @@ socket.onmessage = function(e){
     
 }
 
+
 socket.onopen = function(e){
     console.log("open", e)
     formData.submit(function(event){
@@ -158,7 +165,7 @@ socket.onopen = function(e){
         var finalData = {
             'message' : msgText
         }
-
+        console.log('data',finalData)
         socket.send(JSON.stringify(finalData))
         formData[0].reset()
     })
@@ -172,6 +179,17 @@ socket.onclose = function(e){
     console.log("close", e)
 }
 
-
 </script>
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const webSocketBridge = new channels.WebSocketBridge();
+        webSocketBridge.connect();
+        webSocketBridge.listen(function(action, stream) {
+        console.log("RESPONSE:", action);
+      })
+      document.ws = webSocketBridge; /* for debugging */
+    })
+  </script> -->
+  
 {% endblock %}

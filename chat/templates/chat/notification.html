@@ -1,0 +1,79 @@
+{% extends "user/base.html" %}
+{% block content %}
+    <!-- <h2>Notification</h2>
+    <ul id='notification-items' class="p-0">
+    {% for notification in notifications %}
+        
+        <div class="content-section">
+                <input type="hidden" id="notification_id" value="{{ notification.id }}" />
+                <img class="rounded-circle article-img" src="{{ notification.notification_chat.user.profile.image.url }}">
+                
+        </div>
+    {% endfor %}
+    </ul> -->
+    
+    {% if user.is_authenticated %}
+        {% for notification in notifications %}
+            {% if notification.notification_read == False %}
+            <div class="content-section">
+                <input type="hidden" id="notification_id" value="{{ notification.id }}" />
+                <input type="hidden" id="username" value="{{ notification.notification_user.username }}" />
+                <a class="nav-link" href="{% url 'chat:chat-detail' notification.notification_chat.user %}" id="notificationLink"><span>{{ notification.notification_chat.message }}</span></a>
+            </div>
+            {% endif %}
+        {% endfor %}
+        <h2>No Notification</h2>
+        <div id="notificationFooter"><a href="{% url 'chat:user-inbox' %}">Go to ChatBox</a></div>
+
+    {% endif %}
+
+{% endblock %}
+
+{% block script %}
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.14/vue.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js">
+</script>
+
+<script>
+    var username = $('#username').val()
+    var notification_id = $('#notification_id').val()
+    // console.log(window.location)
+    var loc = window.location
+    var wsStart = 'ws://'
+    if (loc.protocol == 'https:'){
+        wsStart = 'wss://'
+    }
+    var endpoint = wsStart + loc.host + loc.pathname
+    var soc = new WebSocket(endpoint)
+
+    soc.onopen = function(e){
+        console.log("open", e)
+    }
+
+    soc.onmessage = function(e){
+        console.log("message", e)
+        // var data = JSON.parse(event.data);
+    }
+
+    soc.onerror = function(e){
+        console.log("error", e)
+    }
+
+    soc.onclose = function(e){
+        console.log("close", e)
+    }
+
+
+    $(document).ready(function() {
+        $("#notificationLink").click(function() {
+            var data = {           
+                "type": "notification_read",           
+                "username": username,           
+                "notification_id": notification_id,         
+            }         
+            soc.send(JSON.stringify(data));
+        });
+    });
+  </script>
+{% endblock %}

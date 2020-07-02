@@ -6,19 +6,34 @@ from django.views.generic.edit import FormMixin
 from django.views.generic import DetailView, ListView
 
 from chat.forms import ComposeForm
-from chat.models import Thread, ChatMessage
+from chat.models import Thread, ChatMessage, Notification
+
+
+class NotificationListView(LoginRequiredMixin, ListView):
+	model = Notification
+	template_name = 'chat/notification.html'
+	context_object_name = 'notifications'
+
+	def get(self, request, *args, **kwargs):
+		notification = Notification.objects.filter(notification_user=self.request.user)
+		context = {
+				'notifications' : notification
+		}
+		return render(request, 'chat/notification.html', context= context)
+
 
 class InboxView(LoginRequiredMixin, ListView):
-	model = Thread
 	template_name = 'chat/inbox.html'
 	context_object_name = 'rooms_list'
 	ordering = ['-timestamp']
 
 	def get(self, request, *args, **kwargs):
 		rooms_list = Thread.objects.by_user(self.request.user)
+		notifications = Notification.objects.filter(notification_user=self.request.user)
 		if rooms_list.exists():
 			context = {
-				'rooms_list' : rooms_list
+				'rooms_list' : rooms_list,
+				'notifications' : notifications
 			}
 			return render(request, 'chat/inbox.html', context= context)
 
@@ -50,8 +65,6 @@ class ThreadView(LoginRequiredMixin, FormMixin, DetailView):
 		form = self.get_form()
 		
 		if form.is_valid():
-			message = form.cleaned_data['message']
-			message.save()
 			return self.form_valid(form)
 		else:
 			return self.form_invalid(form)
